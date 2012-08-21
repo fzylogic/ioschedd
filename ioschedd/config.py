@@ -10,9 +10,10 @@ def init(file=None):
         sys.exit()
     config = yaml.load(conffile)
     devices = config.get('devices')
-    config.udevkeys = []
+    udevkeys = []
     for dev in devices:
         (key, value) = dev.split('=')
-        if key not in config.udevkeys:
-            config.udevkeys.append(key)
+        if key not in udevkeys:
+            udevkeys.append(key)
+    config['udevkeys'] = udevkeys
     return config

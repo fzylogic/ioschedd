@@ -2,7 +2,7 @@
 
 import argparse
 
-import ioschedd
+from ioschedd.iosdaemon import IOSchedDaemon
 from ioschedconf import config
 
 parser = argparse.ArgumentParser(description='IOScheduler Controller')
@@ -11,9 +11,13 @@ parser.add_argument('--conffile',
                     dest='conffile',
                     default='/etc/ioschedd.conf',
                     )
+parser.add_argument('--background',
+                    action='store_true',
+                    dest='background',
+                    default=False,
+                    )
 args = parser.parse_args()
 
 cfg = config.init(args.conffile)
 
-Daemon = ioschedd.daemon(cfg)
-Daemon.run()
+IOSchedDaemon(cfg, args.background).run()
