@@ -3,7 +3,7 @@
 import argparse
 
 from ioschedd.iosdaemon import IOSchedDaemon
-from ioschedconf import config
+from ioschedd import config
 
 parser = argparse.ArgumentParser(description='IOScheduler Controller')
 parser.add_argument('--conffile',
