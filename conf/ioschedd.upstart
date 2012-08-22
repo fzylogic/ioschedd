@@ -1,0 +1,10 @@
+# ioschedd
+
+description "ioschedd"
+author "Jeremy Hanmer <jeremy@dreamhost.com>"
+
+start on started filesystem
+
+respawn
+
+exec /usr/bin/ioschedd.py --background
