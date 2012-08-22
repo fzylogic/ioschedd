@@ -1,5 +1,6 @@
-import pyudev
 import daemon
+import pyudev
+from ioschedd import device
 
 
 class IOSchedDaemon:
@@ -9,31 +10,26 @@ class IOSchedDaemon:
         self.background = background
 
     def _coldstart(self):
-        for device in self.context.list_devices(subsystem='block',
+        for udevice in self.context.list_devices(subsystem='block',
                                                 DEVTYPE='disk'):
-            print device.keys()
-            print 'driver = ' + str(device.driver)
-            print 'sysname = ' + str(device.sys_name)
-            print 'sysnum = ' + str(device.sys_number)
-            print 'syspath = ' + str(device.sys_path)
-            print 'devtype = ' + str(device.device_type)
-            print 'subsystem = ' + str(device.subsystem)
-            print 'devnode = ' + str(device.device_node)
-            print 'action = ' + str(device.action)
-            for key in self.config['udevkeys']:
-                print 'looking for ' + key
-                if key.upper() in device:
-                    print key.upper() + ' ' + device.get(key.upper())
+            print udevice.keys()
+            print udevice
+            scheduler = device.get_scheduler(self.config, udevice)
+            if not scheduler:
+                scheduler = self.config['default']
+            print udevice.device_node + ' using ' + scheduler
+            device.write_schedfile(udevice, scheduler)
 
     def _loop(self):
         monitor = pyudev.Monitor.from_netlink(self.context)
-        monitor.filter_by('block')
+        monitor.filter_by('block', device_type='disk')
         monitor.start()
-        for device in iter(monitor.poll, None):
-            print dir(device)
-            for key in self.config['udevkeys']:
-                if key.upper() in device:
-                    print key.upper() + ' ' + device.get(key.upper())
+        for udevice in iter(monitor.poll, None):
+            scheduler = device.get_scheduler(self.config, udevice)
+            if not scheduler:
+                scheduler = self.config['default']
+            print udevice.device_node + ' using ' + scheduler
+            device.write_schedfile(udevice, scheduler)
 
     def run(self):
         self._coldstart()
