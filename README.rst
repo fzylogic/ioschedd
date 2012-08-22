@@ -17,3 +17,15 @@ This is particularly handy in the following scenarios:
 * Perhaps your server is hosted somewhere out of your control and you don't have access to change boot parameters
   (say, it's netbooted by your provider) and you'd like to make sure your IO scheduler is changed before your application
   is launched
+
+
+Dependencies:
+=============
+Python 2.7
+
+
+Python Module Dependencies:
+===========================
+* daemon
+* pyudev 0.17+
+* yaml
