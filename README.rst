@@ -27,5 +27,5 @@ Python 2.7
 Python Module Dependencies:
 ===========================
 * daemon
-* pyudev 0.17+
+* pyudev 0.16+
 * yaml
